@@ -1,0 +1,21 @@
+{% extends 'store/base.html' %}
+{% block title %}Register | NEXORA{% endblock %}
+{% block content %}
+<div class="container" style="padding:4rem 1.5rem;max-width:460px;">
+  <div style="background:var(--bg-card);border:1px solid var(--border-accent);border-radius:var(--radius-lg);padding:2.5rem;">
+    <h2 style="font-size:1.8rem;font-weight:800;margin-bottom:1.5rem;text-align:center;">Join NEXORA</h2>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group"><label class="form-label">Full Name</label><input type="text" name="name" required class="form-control"></div>
+      <div class="form-group"><label class="form-label">Username</label><input type="text" name="username" required class="form-control"></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" name="email" required class="form-control"></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" name="password" required class="form-control"></div>
+      <div class="form-group"><label class="form-label">Confirm Password</label><input type="password" name="confirm_password" required class="form-control"></div>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:1.5rem;">Create Account →</button>
+    </form>
+    <div style="text-align:center;margin-top:1.5rem;font-size:0.9rem;">
+      Already registered? <a href="{% url 'login' %}" style="color:var(--primary);font-weight:700;">Sign In</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

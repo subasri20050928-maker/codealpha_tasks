@@ -1,0 +1,39 @@
+{% extends 'store/base.html' %}
+{% block title %}Checkout | NEXORA{% endblock %}
+{% block content %}
+<div class="container" style="padding:3.5rem 1.5rem;max-width:900px;">
+  <h1 style="font-size:2.2rem;font-weight:800;margin-bottom:2rem;">Complete Your Order</h1>
+  <form method="POST" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:2rem;">
+    {% csrf_token %}
+    <h3 style="margin-bottom:1.25rem;">1. Shipping Details</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div class="form-group"><label class="form-label">Full Name</label><input type="text" name="name" value="{{ initial.name|default:'' }}" required class="form-control" placeholder="John Doe"></div>
+      <div class="form-group"><label class="form-label">Phone</label><input type="text" name="phone" value="{{ initial.phone|default:'' }}" required class="form-control" placeholder="+91 98765 43210"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Email</label><input type="email" name="email" value="{{ initial.email|default:'' }}" required class="form-control" placeholder="john@example.com"></div>
+    <div class="form-group"><label class="form-label">Address</label><textarea name="address" rows="2" required class="form-control">{{ initial.address|default:'' }}</textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
+      <div class="form-group"><label class="form-label">City</label><input type="text" name="city" value="{{ initial.city|default:'' }}" required class="form-control"></div>
+      <div class="form-group"><label class="form-label">State</label><input type="text" name="state" value="{{ initial.state|default:'' }}" required class="form-control"></div>
+      <div class="form-group"><label class="form-label">Pincode</label><input type="text" name="pincode" value="{{ initial.pincode|default:'' }}" required class="form-control"></div>
+    </div>
+    <h3 style="margin:2rem 0 1rem;">2. Payment Method</h3>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem;">
+      <label style="padding:1rem;background:var(--bg-surface);border:1px solid var(--border-accent);border-radius:var(--radius-sm);cursor:pointer;flex:1;">
+        <input type="radio" name="payment_method" value="UPI" checked> Instant UPI / QR
+      </label>
+      <label style="padding:1rem;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);cursor:pointer;flex:1;">
+        <input type="radio" name="payment_method" value="Card"> Credit / Debit Card
+      </label>
+      <label style="padding:1rem;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);cursor:pointer;flex:1;">
+        <input type="radio" name="payment_method" value="COD"> Cash on Delivery
+      </label>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem;">
+      <span style="font-size:1.2rem;font-weight:700;">Final Amount:</span>
+      <span style="font-size:2rem;font-weight:800;color:var(--accent);">₹{{ cart.final_total }}</span>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block" style="padding:1rem;">Place Order Now →</button>
+  </form>
+</div>
+{% endblock %}

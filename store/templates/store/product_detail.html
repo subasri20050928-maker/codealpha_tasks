@@ -1,0 +1,34 @@
+{% extends 'store/base.html' %}
+{% block title %}{{ product.name }} | NEXORA{% endblock %}
+{% block content %}
+<div class="container" style="padding:3.5rem 1.5rem;">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start;">
+    <div>
+      <div style="border-radius:var(--radius-md);overflow:hidden;background:var(--bg-surface);border:1px solid var(--border-subtle);height:460px;">
+        <img src="{{ product.main_image }}" alt="{{ product.name }}" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+    </div>
+    <div>
+      <div class="product-category-tag">{{ product.category.name }}</div>
+      <h1 style="font-size:2.4rem;font-weight:800;margin-bottom:1rem;line-height:1.2;">{{ product.name }}</h1>
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;">
+        <div class="product-rating">★ {{ product.rating }} ({{ product.reviews_count }} reviews)</div>
+        <span style="color:var(--success);font-weight:700;">✓ In Stock</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:1rem;margin-bottom:1.5rem;">
+        <span class="current-price" style="font-size:2.2rem;">₹{{ product.current_price }}</span>
+        {% if product.has_discount %}
+        <span class="original-price" style="font-size:1.2rem;">₹{{ product.price }}</span>
+        <span class="discount-badge" style="position:static;">Save {{ product.discount_percentage }}%</span>
+        {% endif %}
+      </div>
+      <p style="color:var(--text-muted);font-size:1.05rem;line-height:1.7;margin-bottom:2rem;">{{ product.description }}</p>
+      <div style="display:flex;gap:1rem;align-items:center;margin-bottom:2rem;">
+        <input type="number" id="detailQty" value="1" min="1" max="10" class="form-control" style="width:70px;text-align:center;">
+        <button onclick="addToCart({{ product.id }}, parseInt(document.getElementById('detailQty').value), this)" class="btn btn-primary" style="padding:0.85rem 2rem;">Add to Cart 🛒</button>
+        <button onclick="toggleWishlist({{ product.id }}, this)" class="btn btn-secondary">❤️ Wishlist</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'store/base.html' %}
+{% block title %}Order Confirmed | NEXORA{% endblock %}
+{% block content %}
+<div class="container" style="padding:4rem 1.5rem;max-width:800px;text-align:center;">
+  <div style="width:70px;height:70px;border-radius:var(--radius-full);background:rgba(16,185,129,0.2);color:var(--success);font-size:2.2rem;display:inline-flex;align-items:center;justify-content:center;margin-bottom:1.5rem;">✓</div>
+  <h1 style="font-size:2.4rem;font-weight:800;">Order Confirmed!</h1>
+  <p style="color:var(--text-muted);font-size:1.1rem;margin-bottom:1rem;">Thank you, {{ order.customer_name }}! Your order has been placed.</p>
+  <div style="display:inline-block;padding:0.4rem 1.25rem;background:var(--bg-surface);border:1px solid var(--border-accent);border-radius:var(--radius-full);font-weight:700;margin-bottom:2.5rem;">
+    Order ID: <span style="color:var(--primary);">{{ order.order_id }}</span>
+  </div>
+
+  <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:2.5rem;margin-bottom:2.5rem;text-align:left;">
+    <h3 style="font-size:1.15rem;font-weight:700;margin-bottom:1rem;">Order Status Timeline</h3>
+    <div class="timeline-track">
+      <div class="timeline-progress-bar" style="width:15%;"></div>
+      <div class="timeline-step completed"><div class="timeline-node">1</div><div class="timeline-label">Placed</div></div>
+      <div class="timeline-step"><div class="timeline-node">2</div><div class="timeline-label">Confirmed</div></div>
+      <div class="timeline-step"><div class="timeline-node">3</div><div class="timeline-label">Packed</div></div>
+      <div class="timeline-step"><div class="timeline-node">4</div><div class="timeline-label">Shipped</div></div>
+      <div class="timeline-step"><div class="timeline-node">5</div><div class="timeline-label">Delivered</div></div>
+    </div>
+    <div style="text-align:center;color:var(--accent);font-weight:700;margin-top:1.5rem;">Current Status: {{ order.get_order_status_display }}</div>
+  </div>
+
+  <div style="display:flex;gap:1rem;justify-content:center;">
+    <a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
+    <a href="{% url 'order_tracking_detail' order.order_id %}" class="btn btn-secondary">Track Order 📍</a>
+  </div>
+</div>
+{% endblock %}

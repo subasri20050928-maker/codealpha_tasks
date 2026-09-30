@@ -1,0 +1,53 @@
+{% extends 'store/base.html' %}
+{% block title %}Cart | NEXORA{% endblock %}
+{% block content %}
+<div class="container" style="padding:3.5rem 1.5rem;">
+  <h1 style="font-size:2.2rem;font-weight:800;margin-bottom:2rem;">Shopping Cart</h1>
+  {% if items %}
+  <div style="display:grid;grid-template-columns:1.8fr 1fr;gap:2.5rem;align-items:start;">
+    <div class="table-card">
+      <table class="table">
+        <thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th></th></tr></thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td style="display:flex;align-items:center;gap:1rem;">
+              <img src="{{ item.product.main_image }}" style="width:55px;height:55px;border-radius:var(--radius-sm);object-fit:cover;">
+              <div>
+                <a href="{% url 'product_detail' item.product.slug %}" style="font-weight:700;">{{ item.product.name }}</a>
+              </div>
+            </td>
+            <td>₹{{ item.product.current_price }}</td>
+            <td>
+              <button onclick="updateCartItem({{ item.id }}, 'decrease')" class="btn btn-secondary btn-sm" style="padding:0.2rem 0.6rem;">-</button>
+              <span style="font-weight:700;padding:0 0.5rem;">{{ item.quantity }}</span>
+              <button onclick="updateCartItem({{ item.id }}, 'increase')" class="btn btn-secondary btn-sm" style="padding:0.2rem 0.6rem;">+</button>
+            </td>
+            <td style="font-weight:700;color:var(--primary);">₹{{ item.line_total }}</td>
+            <td><button onclick="removeCartItem({{ item.id }})" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:1.1rem;">✕</button></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:2rem;">
+      <h3 style="font-size:1.25rem;font-weight:700;margin-bottom:1.5rem;">Order Summary</h3>
+      <div style="display:flex;justify-content:space-between;margin-bottom:0.75rem;"><span>Subtotal</span><span>₹{{ cart.subtotal }}</span></div>
+      {% if cart.total_savings > 0 %}<div style="display:flex;justify-content:space-between;margin-bottom:0.75rem;color:var(--success);"><span>Discounts</span><span>-₹{{ cart.total_savings }}</span></div>{% endif %}
+      <div style="display:flex;justify-content:space-between;margin-bottom:1rem;"><span>Delivery</span><span>{% if cart.delivery_charge == 0 %}FREE{% else %}₹{{ cart.delivery_charge }}{% endif %}</span></div>
+      <div style="border-top:1px solid var(--border-subtle);padding-top:1rem;display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem;">
+        <span style="font-weight:700;font-size:1.1rem;">Total</span>
+        <span style="font-size:1.8rem;font-weight:800;color:var(--accent);">₹{{ cart.final_total }}</span>
+      </div>
+      <a href="{% url 'checkout' %}" class="btn btn-primary btn-block" style="padding:0.9rem;">Proceed to Checkout 💳</a>
+    </div>
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:4rem 2rem;background:var(--bg-card);border-radius:var(--radius-md);">
+    <h2>Your cart is empty</h2>
+    <p style="color:var(--text-muted);margin:1rem 0 1.5rem;">Discover our trending products.</p>
+    <a href="{% url 'product_list' %}" class="btn btn-primary">Start Shopping</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

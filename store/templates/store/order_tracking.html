@@ -1,0 +1,32 @@
+{% extends 'store/base.html' %}
+{% block title %}Track Order | NEXORA{% endblock %}
+{% block content %}
+<div class="container" style="padding:4rem 1.5rem;max-width:800px;">
+  <h1 style="font-size:2.2rem;font-weight:800;margin-bottom:1.5rem;text-align:center;">Track Your Order</h1>
+  <form method="GET" style="display:flex;gap:0.75rem;margin-bottom:2.5rem;">
+    <input type="text" name="order_id" value="{{ searched_id }}" required class="form-control" placeholder="Enter Order ID e.g. NX-892415">
+    <button type="submit" class="btn btn-primary">Track</button>
+  </form>
+
+  {% if order %}
+  <div style="background:var(--bg-card);border:1px solid var(--border-accent);border-radius:var(--radius-lg);padding:2.5rem;">
+    <div style="display:flex;justify-content:space-between;margin-bottom:2rem;">
+      <div>
+        <h3>Order #{{ order.order_id }}</h3>
+        <div style="color:var(--text-dim);font-size:0.85rem;">{{ order.customer_name }} - {{ order.created_at|date:"M d, Y" }}</div>
+      </div>
+      <span style="color:var(--primary);font-weight:800;">{{ order.get_order_status_display }}</span>
+    </div>
+
+    <div class="timeline-track">
+      <div class="timeline-progress-bar" style="width:{% if order.order_status == 'Placed' %}15%{% elif order.order_status == 'Confirmed' %}38%{% elif order.order_status == 'Packed' %}62%{% elif order.order_status == 'Shipped' %}85%{% elif order.order_status == 'Delivered' %}100%{% else %}0%{% endif %};"></div>
+      <div class="timeline-step {% if order.status_step_index >= 1 %}completed{% endif %}"><div class="timeline-node">1</div><div class="timeline-label">Placed</div></div>
+      <div class="timeline-step {% if order.status_step_index >= 2 %}completed{% endif %}"><div class="timeline-node">2</div><div class="timeline-label">Confirmed</div></div>
+      <div class="timeline-step {% if order.status_step_index >= 3 %}completed{% endif %}"><div class="timeline-node">3</div><div class="timeline-label">Packed</div></div>
+      <div class="timeline-step {% if order.status_step_index >= 4 %}completed{% endif %}"><div class="timeline-node">4</div><div class="timeline-label">Shipped</div></div>
+      <div class="timeline-step {% if order.status_step_index >= 5 %}completed{% endif %}"><div class="timeline-node">5</div><div class="timeline-label">Delivered</div></div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

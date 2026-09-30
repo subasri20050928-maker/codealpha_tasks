@@ -1,0 +1,25 @@
+{% extends 'store/base.html' %}
+{% block title %}Compare | NEXORA{% endblock %}
+{% block content %}
+<div class="container" style="padding:3.5rem 1.5rem;">
+  <h1 style="font-size:2.2rem;font-weight:800;margin-bottom:2rem;">Product Comparison</h1>
+  {% if products %}
+  <div class="table-card">
+    <table class="table">
+      <thead>
+        <tr><th>Feature</th>{% for p in products %}<th style="text-align:center;">{{ p.name }}</th>{% endfor %}</tr>
+      </thead>
+      <tbody>
+        <tr><td>Price</td>{% for p in products %}<td style="text-align:center;font-weight:800;color:var(--accent);">₹{{ p.current_price }}</td>{% endfor %}</tr>
+        <tr><td>Rating</td>{% for p in products %}<td style="text-align:center;">★ {{ p.rating }}</td>{% endfor %}</tr>
+        <tr><td>Action</td>{% for p in products %}<td style="text-align:center;"><button onclick="addToCart({{ p.id }}, 1, this)" class="btn btn-primary btn-sm">Add to Cart</button></td>{% endfor %}</tr>
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:4rem 2rem;background:var(--bg-card);border-radius:var(--radius-md);">
+    <h3>No products selected for comparison</h3>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

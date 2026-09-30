@@ -1,0 +1,22 @@
+{% extends 'store/base.html' %}
+{% block title %}Login | NEXORA{% endblock %}
+{% block content %}
+<div class="container" style="padding:5rem 1.5rem;max-width:440px;">
+  <div style="background:var(--bg-card);border:1px solid var(--border-accent);border-radius:var(--radius-lg);padding:2.5rem;">
+    <h2 style="font-size:1.8rem;font-weight:800;margin-bottom:1.5rem;text-align:center;">Sign In to NEXORA</h2>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group"><label class="form-label">Username</label><input type="text" name="username" required autofocus class="form-control"></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" name="password" required class="form-control"></div>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:1.5rem;">Sign In →</button>
+    </form>
+    <div style="text-align:center;margin-top:1.5rem;font-size:0.9rem;">
+      Don't have an account? <a href="{% url 'register' %}" style="color:var(--primary);font-weight:700;">Register</a>
+    </div>
+    <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border-subtle);font-size:0.8rem;color:var(--text-dim);text-align:center;">
+      Demo User: <strong>john_doe</strong> / <strong>password123</strong><br>
+      Admin: <strong>admin</strong> / <strong>admin123</strong>
+    </div>
+  </div>
+</div>
+{% endblock %}

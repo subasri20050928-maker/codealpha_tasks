@@ -1,0 +1,198 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}NEXORA | Smart Shopping, Simplified{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container">
+      <a href="{% url 'home' %}" class="brand-logo">
+        <svg viewBox="0 0 24 24"><defs><linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs><polygon points="12 2 2 7 12 12 22 7 12 2"/><polygon points="2 17 12 22 22 17 12 12 2 17"/></svg>
+        NEXORA
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
+        <li><a href="{% url 'product_list' %}" class="nav-link {% if request.resolver_match.url_name == 'product_list' and not request.GET.sort %}active{% endif %}">Shop</a></li>
+        <li><a href="{% url 'product_list' %}#categories" class="nav-link">Categories</a></li>
+        <li><a href="{% url 'product_list' %}?sort=popular" class="nav-link">Trending</a></li>
+        <li><a href="{% url 'home' %}#flash-deals" class="nav-link">⚡ Deals</a></li>
+      </ul>
+
+      <!-- Smart Search -->
+      <form action="{% url 'product_list' %}" method="GET" class="nav-search-box">
+        <span class="nav-search-icon">🔍</span>
+        <input type="text" name="q" value="{{ request.GET.q|default:'' }}" class="nav-search-input" placeholder="Search laptop, headphones, shoes..." autocomplete="off" id="headerSearchInput">
+        <div class="search-dropdown" id="searchDropdown"></div>
+      </form>
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <button class="action-btn" id="themeToggleBtn" title="Toggle Theme">
+          <span id="themeIcon">🌙</span>
+        </button>
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'wishlist' %}" class="action-btn" title="Wishlist">
+          <span>❤️</span>
+          <span class="badge-count" id="wishlistBadge">{{ wishlist_count }}</span>
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}?next={% url 'wishlist' %}" class="action-btn" title="Wishlist">
+          <span>❤️</span>
+        </a>
+        {% endif %}
+
+        <a href="{% url 'cart' %}" class="action-btn" id="navCartBtn" title="Shopping Cart">
+          <span>🛒</span>
+          <span class="badge-count" id="cartBadge">{{ cart_count }}</span>
+        </a>
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}" class="btn btn-secondary btn-sm" style="margin-left:0.25rem;">
+          👤 {{ user.first_name|default:user.username }}
+        </a>
+        <a href="{% url 'logout' %}" class="btn btn-secondary btn-sm" title="Logout">Exit</a>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn btn-secondary btn-sm">Login</a>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- Messages / Alerts -->
+  <div class="toast-container">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="toast toast-{{ message.tags|default:'success' }}">
+          <span>{{ message }}</span>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <!-- Main Content -->
+  <main style="flex:1;">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="{% url 'home' %}" class="brand-logo" style="margin-bottom:0.75rem;">NEXORA</a>
+          <p class="footer-desc">Smart Shopping, Simplified. A modern, AI-powered e-commerce ecosystem built for seamless discovery and elevated living.</p>
+          <div style="display:flex;gap:1rem;color:var(--text-dim);font-size:1.2rem;">
+            <span>🌐</span> <span>🐦</span> <span>📸</span> <span>💼</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Shop</h4>
+          <ul class="footer-links">
+            <li><a href="{% url 'product_list' %}" class="footer-link">All Products</a></li>
+            {% for cat in global_categories %}
+            <li><a href="{% url 'product_list' %}?category={{ cat.slug }}" class="footer-link">{{ cat.name }}</a></li>
+            {% endfor %}
+            <li><a href="{% url 'home' %}#flash-deals" class="footer-link">Flash Deals</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Account</h4>
+          <ul class="footer-links">
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'profile' %}" class="footer-link">My Profile</a></li>
+            <li><a href="{% url 'wishlist' %}" class="footer-link">Wishlist</a></li>
+            <li><a href="{% url 'cart' %}" class="footer-link">Shopping Cart</a></li>
+            <li><a href="{% url 'order_tracking' %}" class="footer-link">Track Orders</a></li>
+            <li><a href="{% url 'logout' %}" class="footer-link">Sign Out</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}" class="footer-link">Sign In</a></li>
+            <li><a href="{% url 'register' %}" class="footer-link">Create Account</a></li>
+            <li><a href="{% url 'order_tracking' %}" class="footer-link">Track Order</a></li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Customer Care</h4>
+          <ul class="footer-links">
+            <li><a href="{% url 'order_tracking' %}" class="footer-link">Order Status</a></li>
+            <li><a href="{% url 'home' %}#ai-assistant" class="footer-link">AI Shopping Assistant</a></li>
+            <li><a href="{% url 'compare' %}" class="footer-link">Product Comparison</a></li>
+            <li><a href="#" class="footer-link">Shipping & Returns</a></li>
+            <li><a href="/admin/" class="footer-link" style="color:var(--accent);">Django Admin</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 NEXORA Inc. All rights reserved. Built with Django & Modern Web Standards.</div>
+        <div style="display:flex;gap:1.5rem;">
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Service</a>
+          <a href="#" class="footer-link">Security</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="{% static 'js/theme.js' %}"></script>
+  <script src="{% static 'js/cart.js' %}"></script>
+  <script>
+    // Header search autocomplete
+    const searchInput = document.getElementById('headerSearchInput');
+    const searchDrop = document.getElementById('searchDropdown');
+    if (searchInput && searchDrop) {
+      let timer = null;
+      searchInput.addEventListener('input', () => {
+        clearTimeout(timer);
+        const q = searchInput.value.trim();
+        if (q.length < 2) {
+          searchDrop.style.display = 'none';
+          return;
+        }
+        timer = setTimeout(() => {
+          fetch('/api/search-suggest/?q=' + encodeURIComponent(q))
+            .then(res => res.json())
+            .then(data => {
+              if (data.results && data.results.length > 0) {
+                let html = '';
+                data.results.forEach(item => {
+                  html += '<a href="/product/' + item.slug + '/" class="search-result-item">' +
+                    '<img src="' + item.image + '" class="search-result-thumb">' +
+                    '<div><div style="font-weight:600;font-size:0.9rem;">' + item.name + '</div>' +
+                    '<div style="font-size:0.8rem;color:var(--primary);font-weight:700;">₹' + item.current_price.toLocaleString('en-IN') + '</div></div></a>';
+                });
+                searchDrop.innerHTML = html;
+                searchDrop.style.display = 'block';
+              } else {
+                searchDrop.style.display = 'none';
+              }
+            });
+        }, 250);
+      });
+      document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !searchDrop.contains(e.target)) {
+          searchDrop.style.display = 'none';
+        }
+      });
+    }
+  </script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

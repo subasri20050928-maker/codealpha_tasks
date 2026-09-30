@@ -1,0 +1,30 @@
+{% extends 'store/base.html' %}
+{% block title %}Wishlist | NEXORA{% endblock %}
+{% block content %}
+<div class="container" style="padding:3.5rem 1.5rem;">
+  <h1 style="font-size:2.2rem;font-weight:800;margin-bottom:2rem;">My Wishlist ❤️</h1>
+  {% if wishlist_items %}
+  <div class="product-grid">
+    {% for item in wishlist_items %}
+    <div class="product-card">
+      <div class="product-thumb-wrap">
+        <a href="{% url 'product_detail' item.product.slug %}">
+          <img src="{{ item.product.main_image }}" class="product-thumb">
+        </a>
+      </div>
+      <div class="product-content">
+        <h4 class="product-name"><a href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a></h4>
+        <div class="current-price" style="margin-bottom:1rem;">₹{{ item.product.current_price }}</div>
+        <button onclick="addToCart({{ item.product.id }}, 1, this)" class="btn btn-primary btn-sm btn-block">Move to Cart 🛒</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:4rem 2rem;background:var(--bg-card);border-radius:var(--radius-md);">
+    <h3>Your wishlist is empty</h3>
+    <a href="{% url 'product_list' %}" class="btn btn-primary btn-sm" style="margin-top:1rem;">Browse Products</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
